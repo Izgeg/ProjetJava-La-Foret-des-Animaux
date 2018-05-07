@@ -23,16 +23,28 @@ public class Case{
 
 
     public void initAleaCase(){
-    	if(Math.random() < 0.33){
+    	if(Math.random() < 0.2){
 	    terrain = new Terre();
     	}
     	else{
-	    if(Math.random() < 0.66){
-		terrain = new Eau();	
-	    }
-	    else{
-		terrain = new Verdure();
-	    }
+    	    if(Math.random() < 0.4){
+    		terrain = new Plante();	
+    	    }
+    	    else{
+    	        
+        	    if(Math.random() < 0.6){
+        		terrain = new Arbre();	
+        	    }
+        	    
+        	    else{
+    	            if(Math.random() < 0.8){
+    		        terrain = new Eau();	
+    	            }
+    	            else{
+		                terrain = new Verdure();
+	               }
+	            }
+	        }
     	}
     }
     ////////////////////////////GETTEURS////////////////////////////
@@ -83,6 +95,13 @@ public class Case{
     	return CloneCase;
     }
     
+	public void marcherAnimaux(){
+		for(Animal a : animaux){
+			a.marcher();
+		}
+	
+	}
+
     public void afficherAnimaux(){
     	for(Animal a : animaux){
 	    if(a instanceof Cerf){

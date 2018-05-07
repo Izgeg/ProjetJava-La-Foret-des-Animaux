@@ -2,7 +2,7 @@ import java.lang.Math;
 import java.util.ArrayList;
 
 public class Lapin extends Animal{
-
+    public static final double defenseLapin = 0.5;
     private final static int odorat = 2;
     private final static int vitesse = 1;
 
@@ -26,7 +26,7 @@ public class Lapin extends Animal{
     ////////////////////////////ACTIONS////////////////////////////
     
     public double seDefendre(){
-	return Math.random()*Constante.JetDef + Constante.defenseLapin;//nombre à revoir
+	return Math.random()*Constante.JetDef + Constante.defenseLapin + energie;
     }    
 
 
@@ -66,21 +66,27 @@ public class Lapin extends Animal{
     
     }
 
-    public void fuir(Animal a){
-	if(this.x - a.x > 0){
-	    directionX = -1*Math.min(this.x - a.x,this.vitesse);
-	}
-	else{
-	    directionX = -1*Math.max(this.x - a.x,this.vitesse);	
-	}
-
-	if(this.y- a.y> 0){
-	    directionY= -1*Math.min(this.y - a.y,this.vitesse);
-	}
-	else{
-	    directionY = -1*Math.max(this.y - a.y,this.vitesse);	
-	}
+    // A REVOIR
+     public void fuir(Animal a){
+    		if(a.x > this.x){
+			directionX = -1*Math.min(a.x - this.x,vitesse);
+		}
+		else{
+			directionX = -1*Math.max(a.x - this.x,-vitesse);
+		}
+		
+		if(a.y > this.y){
+			directionY = -1*Math.min(a.y - this.y,vitesse);
+		}
+		else{
+			directionY = -1*Math.max(a.y - this.y,-vitesse);
+		}
+    
+    	x+= directionX;
+    	y+= directionY;
     }
+
+    
     ////////////////////////////UTILITAIRES////////////////////////////
 
     public boolean naissance(Animal a){

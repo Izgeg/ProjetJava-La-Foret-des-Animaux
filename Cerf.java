@@ -1,36 +1,29 @@
 import java.lang.Math;
 import java.util.ArrayList;
 
-public class Cerf extends Animal implements Proie, ATerrestre{
-    private int directionX;
-    private int directionY;
+public class Cerf extends Animal implements Proie{
+    public static final double defenseCerf = 80.;
     private final static int odorat = 3;
     private final static int vitesse = 4;
     
     ////////////////////////////CONSTRUCTEURS////////////////////////////
     public Cerf(int x, int y, int age, char sexe){
 	super(x,y,age,sexe);
-	directionX = (int)Math.random();
-	directionY = (int)Math.random();
     }
     
     public Cerf(int x, int y){
         super(x,y);
-	directionX = (int)Math.random();
-	directionY = (int)Math.random();
     }
     
     public Cerf(){
 	super();
-	directionX = (int)Math.random();
-	directionY = (int)Math.random();
     }
     
     ////////////////////////////ACTIONSS////////////////////////////
     
     public double seDefendre(){
-        return Math.random()*Constante.JetDef + Constante.defenseCerf;
-        //nombre à revoir
+        return Math.random()*Constante.JetDef + Constante.defenseCerf + energie;
+        
     } 
     
     public Animal seReproduire(Animal a, Foret f){
@@ -68,21 +61,26 @@ public class Cerf extends Animal implements Proie, ATerrestre{
     }
 
     
+    // A REVOIR
     public void fuir(Animal a){
-	if(this.x - a.x > 0){
-	    directionX = -1*Math.min(this.x - a.x,this.vitesse);
-	}
-	else{
-	    directionX = -1*Math.max(this.x - a.x,this.vitesse);	
-	}
-	
-	if(this.y- a.y> 0){
-	    directionY= -1*Math.min(this.y - a.y,this.vitesse);
-	}
-	else{
-	    directionY = -1*Math.max(this.y - a.y,this.vitesse);	
-	}
+    		if(a.x > this.x){
+			directionX = -1*Math.min(a.x - this.x,vitesse);
+		}
+		else{
+			directionX = -1*Math.max(a.x - this.x,-vitesse);
+		}
+		
+		if(a.y > this.y){
+			directionY = -1*Math.min(a.y - this.y,vitesse);
+		}
+		else{
+			directionY = -1*Math.max(a.y - this.y,-vitesse);
+		}
+    
+    	x+= directionX;
+    	y+= directionY;
     }
+
     
 
     ////////////////////////////UTILITAIRES////////////////////////////

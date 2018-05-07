@@ -1,29 +1,27 @@
 public class Arbre extends Plante{
-    private boolean estProducteur;
+    private boolean producteur;
 
 
     ////////////////////////////CONSTRUCTEURS////////////////////////////
     public Arbre(){
         super();
+        producteur = true;
     }
     
-    public Arbre(boolean estProducteur){
+    public Arbre(boolean producteur){
         super();
-        this.estProducteur = estProducteur;
+        this.producteur = producteur;
     }
 
 
 
-
+    public boolean estProducteur(){
+        return producteur;
+    }
 
     ////////////////////////////UTILITAIRES////////////////////////////
     public boolean estMange(){
-        if (estProducteur == true){
-            return true;
-        }
-        else{
-            return false;
-        }
+        return true;
     }
     
     

@@ -6,19 +6,27 @@ public class Plante extends Verdure{
         this.comestible = comestible;
         this.taille = taille;
     } 
+    
     Plante(boolean comestible){
         this.comestible = comestible;
         this.taille = (int)(Math.random()*11);
     }
 
     Plante(){
-        this.comestible = false;
+        this.comestible = true;
         this.taille = (int)(Math.random()*11);
     }
     
+    public boolean estComestible(){
+        return comestible;
+    }
+    
+    public void vieillir(){
+        taille += 2;
+    }
     
     public boolean estMange(){
-        if(taille > 2){
+        if(taille > 0){
             taille--;
             return true;
         }

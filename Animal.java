@@ -6,6 +6,8 @@ public abstract class Animal{
     protected int energie;
     protected int age;//en mois
     protected final char sexe;
+    protected boolean bienManger = false; 
+
 
     ////////////////////////////CONSTRUCTEURS////////////////////////////
     public Animal(int x, int y, int age, char sexe){
@@ -61,7 +63,9 @@ public abstract class Animal{
 	age++;
     }
 
-    
+    public void setBienManger(boolean a){
+    	bienmanger = a ;
+    }
     
     ////////////////////////////GETTEURS////////////////////////////
 
@@ -84,7 +88,9 @@ public abstract class Animal{
     public char getSexe(){
 	return sexe;
     }
-
+	public boolean getBienManger{
+		return bienmanger;
+	}
     ////////////////////////////ACTIONS////////////////////////////
     public void marcher(){
 	if((x+directionX >= 0) && (x+directionX < Constante.tailleY))
@@ -96,10 +102,20 @@ public abstract class Animal{
 	directionY = (int)(Math.random()*3)-1;
     }
 
+    public void MangerEnergie(){
+        if(energie < 80)
+            energie += 20;
+        else
+            energie = 100;
+    }
 
-
-    //public abstract double seBattre(Animal a);
+    
     public abstract Animal seReproduire(Animal a, Foret f);
-
+        public boolean dejaManger(){
+        return this.bienManger;
+    }
+    public void setbienManger(boolean a){
+        this.bienManger = a;
+    }
     
 }

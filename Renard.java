@@ -1,9 +1,12 @@
 import java.lang.Math;
 import java.util.ArrayList;
 
-public class Renard extends Animal implements Predateur, Proie, ATerrestre{
+public class Renard extends Animal implements Predateur, Proie{
     private final static int odorat = 3;
     private final static int vitesse = 3;
+    public static final double defenseRenard = 35.;    
+    public static final double attaqueRenard = 50.;
+
     
     ////////////////////////////CONSTRUCTEURS////////////////////////////
     
@@ -25,11 +28,11 @@ public class Renard extends Animal implements Predateur, Proie, ATerrestre{
     ////////////////////////////ACTIONS////////////////////////////
 
     public double seDefendre(){
-	return Math.random()*Constante.JetDef + Constante.defenseRenard;//nombre à revoir
+	return Math.random()*Constante.JetDef + Constante.defenseRenard + energie;
     }    
     
-    public double attaquer(Animal a){
-        return Math.random()*Constante.JetOff + Constante.attaqueRenard;//nombre à revoir
+    public double attaquer(){
+        return Math.random()*Constante.JetOff + Constante.attaqueRenard + energie;
     }    
 
     public Animal seReproduire(Animal a, Foret f){
@@ -70,10 +73,12 @@ public class Renard extends Animal implements Predateur, Proie, ATerrestre{
 
 
     public void sentirProie(Foret f){
-
 	ArrayList<Animal> proiesPotentielles = new ArrayList<Animal>() ;
-	for(int i = this.getY() + odorat ; i < this.getY() - odorat ; ++i){
-	    for(int j = this.getX() - odorat ; i < this.getX() + odorat ; ++j){
+	
+	    
+	for(int i = Math.max(this.getY() - odorat,0) ; i < Math.min(this.getY() + odorat, Constante.tailleY - 1) ; ++i){
+	    
+	    for(int j = Math.max(this.getX() - odorat,0) ; j < Math.min(this.getX() + odorat, Constante.tailleX - 1) ; ++j){
 		ArrayList<Animal> list = f.foret[i][j].getAnimaux();
 		for(Animal a : list){
 		    if(estProie(a))
@@ -85,40 +90,51 @@ public class Renard extends Animal implements Predateur, Proie, ATerrestre{
 	    return;
 	
 	chasser(plusProche(proiesPotentielles));
+		
     }
 
-    public void chasser(Animal a){
-	if(this.x - a.x > 0){
-	    directionX = Math.min(this.x - a.x,this.vitesse);
-	}
-	else{
-	    directionX = Math.max(this.x - a.x,this.vitesse);	
-	}
-
-	if(this.y- a.y> 0){
-	    directionY= Math.min(this.y - a.y,this.vitesse);
-	}
-	else{
-	    directionY = Math.max(this.y - a.y,this.vitesse);	
-	}
+        public void chasser(Animal a){
+    	//System.out.println(a.getClass());
+    	
+    
+		if(a.x > this.x){
+			directionX = Math.min(a.x - this.x,vitesse);
+		}
+		else{
+			directionX = Math.max(a.x - this.x,-vitesse);
+		}
+		
+		if(a.y > this.y){
+			directionY = Math.min(a.y - this.y,vitesse);
+		}
+		else{
+			directionY = Math.max(a.y - this.y,-vitesse);
+		}
+    
+    	x+= directionX;
+    	y+= directionY;
     }
 
     public void fuir(Animal a){
-	if(this.x - a.x > 0){
-	    directionX = -1*Math.min(this.x - a.x,this.vitesse);
-	}
-	else{
-	    directionX = -1*Math.max(this.x - a.x,this.vitesse);	
-	}
-
-	if(this.y- a.y> 0){
-	    directionY= -1*Math.min(this.y - a.y,this.vitesse);
-	}
-	else{
-	    directionY = -1*Math.max(this.y - a.y,this.vitesse);	
-	}
+    		if(a.x > this.x){
+			directionX = -1*Math.min(a.x - this.x,vitesse);
+		}
+		else{
+			directionX = -1*Math.max(a.x - this.x,-vitesse);
+		}
+		
+		if(a.y > this.y){
+			directionY = -1*Math.min(a.y - this.y,vitesse);
+		}
+		else{
+			directionY = -1*Math.max(a.y - this.y,-vitesse);
+		}
+    
+    	x+= directionX;
+    	y+= directionY;
     }
 
+    
 
     ////////////////////////////UTILITAIRES////////////////////////////
     public Animal plusProche(ArrayList<Animal> list){
@@ -159,4 +175,20 @@ public class Renard extends Animal implements Predateur, Proie, ATerrestre{
 	else 
 	    return false;	
     }
+    
+public void combattre(Animal a);{
+		double attack = this.attaquer();		
+		double defense = a.seDefendre();
+		if(attack >= defense){
+			manger(a);
+			if(attack == defense)
+				this.energie -= 10;//en cas d'égalité, le prédateur gagne mais perd de l'energie
+		}
+		else{
+		this.energie -= (defense - attack)*5;	
+		}
+	
+	}
+
+
 }
