@@ -28,11 +28,11 @@ public class Renard extends Animal implements Predateur, Proie{
     ////////////////////////////ACTIONS////////////////////////////
 
     public double seDefendre(){
-	return Math.random()*Constante.JetDef + Constante.defenseRenard + energie;
+	return Math.random()*Constante.JetDef + defenseRenard + energie;
     }    
     
     public double attaquer(){
-        return Math.random()*Constante.JetOff + Constante.attaqueRenard + energie;
+        return Math.random()*Constante.JetOff + attaqueRenard + energie;
     }    
 
     public Animal seReproduire(Animal a, Foret f){
@@ -175,12 +175,18 @@ public class Renard extends Animal implements Predateur, Proie{
 	else 
 	    return false;	
     }
+
+	public void mangerAnimal(Animal a, Foret f){
+		this.energie += 0.5*a.energie;//pris au pif
+		((Animal)a).mourir(f);
+		
+}
     
-public void combattre(Animal a);{
+public void combattre(Animal a, Foret f){
 		double attack = this.attaquer();		
-		double defense = a.seDefendre();
+		double defense = ((Proie)a).seDefendre();
 		if(attack >= defense){
-			manger(a);
+			mangerAnimal(a, f);
 			if(attack == defense)
 				this.energie -= 10;//en cas d'égalité, le prédateur gagne mais perd de l'energie
 		}

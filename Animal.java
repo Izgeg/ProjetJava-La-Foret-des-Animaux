@@ -1,3 +1,13 @@
+import java.util.ArrayList;
+import javax.imageio.ImageIO;
+import java.io.File;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+import java.awt.Graphics2D;
+
 public abstract class Animal{
     protected int x;
     protected int y;
@@ -5,46 +15,36 @@ public abstract class Animal{
     protected int directionY;
     protected int energie;
     protected int age;//en mois
-    protected final char sexe;
-    protected boolean bienManger = false; 
+    protected char sexe;
+    protected boolean bienManger = false;
+
+	protected BufferedImage animalImage;
 
 
     ////////////////////////////CONSTRUCTEURS////////////////////////////
     public Animal(int x, int y, int age, char sexe){
-	this.x = x;// position
-	this.y = y;// de l'animal
-	this.sexe = sexe ;// 'm' ou 'f' pour les 2 sexes
-	energie = 100 ;//énergie de base pour les animaux
-	this.age = age;
-	directionX = (int)(Math.random()*3)-1;
-	directionY = (int)(Math.random()*3)-1;
+		this.x = x;// position
+		this.y = y;// de l'animal
+		this.sexe = sexe ;// 'm' ou 'f' pour les 2 sexes
+		energie = 100 ;//énergie de base pour les animaux
+		this.age = age;
+		directionX = (int)(Math.random()*3)-1;
+		directionY = (int)(Math.random()*3)-1;
+		try{
+			animalImage = ImageIO.read(new File("animal.png"));
+		}catch(Exception e){e.printStackTrace();}
     }
 
     public Animal(int x, int y){ //Pour les bébés
-	this.x = x;
-	this.y = y;
-	if(Math.random() > 0.5)
-	    sexe = 'f';
-	else
-	    sexe = 'm';
-	energie = 100;
-	age = 0;
-	directionX = (int)(Math.random()*3)-1;
-	directionY = (int)(Math.random()*3)-1;
-    }
+		this(x,y,0,'m');		
+		if(Math.random() > 0.5) this.sexe = 'f';
+		   
+	}
 
     public Animal(){
-	x = (int)(Math.random()*Constante.tailleX);
-	y = (int)(Math.random()*Constante.tailleY);
-	
-	age = 12;
-	energie = (int)Math.random()*50 + 50;
-	if(Math.random() > 0.5)
-	    sexe = 'f';
-	else
-	    sexe = 'm';
-	directionX = (int)(Math.random()*3)-1;
-	directionY = (int)(Math.random()*3)-1;
+		this((int)(Math.random()*Constante.tailleX),(int)(Math.random()*Constante.tailleY),12,'m');
+		if(Math.random() > 0.5) this.sexe = 'f';
+		this.energie = (int)Math.random()*50 + 50;
     }
 	
 
@@ -64,8 +64,12 @@ public abstract class Animal{
     }
 
     public void setBienManger(boolean a){
-    	bienmanger = a ;
+    	bienManger = a ;
     }
+
+	public void mourir(Foret f){
+		f.foret[this.x][this.y].getAnimaux().remove(this);
+	}
     
     ////////////////////////////GETTEURS////////////////////////////
 
@@ -88,8 +92,9 @@ public abstract class Animal{
     public char getSexe(){
 	return sexe;
     }
-	public boolean getBienManger{
-		return bienmanger;
+	
+	public boolean getBienManger(){
+		return bienManger;
 	}
     ////////////////////////////ACTIONS////////////////////////////
     public void marcher(){
@@ -117,5 +122,9 @@ public abstract class Animal{
     public void setbienManger(boolean a){
         this.bienManger = a;
     }
+
+	public void afficher(Graphics2D g, int posX, int posY){
+		g.drawImage(animalImage,posX,posY,null);
+}
     
 }

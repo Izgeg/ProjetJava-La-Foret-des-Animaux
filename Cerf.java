@@ -22,7 +22,7 @@ public class Cerf extends Animal implements Proie{
     ////////////////////////////ACTIONSS////////////////////////////
     
     public double seDefendre(){
-        return Math.random()*Constante.JetDef + Constante.defenseCerf + energie;
+        return Math.random()*Constante.JetDef + defenseCerf + energie;
         
     } 
     

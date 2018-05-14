@@ -26,7 +26,7 @@ public class Lapin extends Animal{
     ////////////////////////////ACTIONS////////////////////////////
     
     public double seDefendre(){
-	return Math.random()*Constante.JetDef + Constante.defenseLapin + energie;
+	return Math.random()*Constante.JetDef + defenseLapin + energie;
     }    
 
 

@@ -1,4 +1,12 @@
 import java.util.ArrayList;
+import javax.imageio.ImageIO;
+import java.io.File;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+import java.awt.Graphics2D;
 
 public class Foret{
     public Case[][] foret;
@@ -82,8 +90,6 @@ public class Foret{
 	    }
 	   
 	}
-	foretStock.afficherForet();
-
 	return foretStock;
     }
 	
@@ -137,7 +143,7 @@ public class Foret{
 	    for(Animal b : list){
 		if(a instanceof Predateur){
 		    if(((Predateur)(a)).estProie(b)){
-			if(((Predateur)(a)).dejaManger() == false){
+			if(a.getBienManger()==false){
 			    a.MangerEnergie();
 			    list.remove(b);
 			    a.setbienManger(true);
@@ -181,35 +187,17 @@ public class Foret{
     }
 	
 	
-    public void afficherForet(){
-	System.out.println("_ _ _ _ _ _ _ _ _ _");
+    public void afficherForet(Graphics2D g){
+	//dessin des cases
 	for(int i=0;i<longueur;i++){
 	    for(int j=0;j<largeur;j++){
-		if (foret[i][j].getTerrain() instanceof Verdure){
-		    if (foret[i][j].getTerrain() instanceof Plante){
-		        if (foret[i][j].getTerrain() instanceof Arbre){
-		            System.out.print("A : ");
-		        }
-		        else{
-		            System.out.print("P : ");
-		        }
-		    }
-		    else{
-			System.out.print("V : ");
-		    }
-		}
-		if (foret[i][j].getTerrain() instanceof Terre){
-		    System.out.print("T : ");
-		}
-		if (foret[i][j].getTerrain() instanceof Eau){
-		    System.out.print("E : ");
-		}
+		foret[i][j].getTerrain().afficher(g,i*100,j*100);
 		
-		foret[i][j].afficherAnimaux();
+		foret[i][j].afficherAnimaux(g,i*100,j*100);
 		
-		System.out.print("\t");
+		//System.out.print("\t");
 	    }
-	    System.out.print("\n");
+	    //System.out.print("\n");
 	}
     }
 

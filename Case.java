@@ -1,5 +1,12 @@
 import java.util.ArrayList;
+import javax.imageio.ImageIO;
+import java.io.File;
+import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+import java.awt.Graphics2D;
 import java.lang.Math;
 
 public class Case{
@@ -23,29 +30,11 @@ public class Case{
 
 
     public void initAleaCase(){
-    	if(Math.random() < 0.2){
-	    terrain = new Terre();
-    	}
-    	else{
-    	    if(Math.random() < 0.4){
-    		terrain = new Plante();	
-    	    }
-    	    else{
-    	        
-        	    if(Math.random() < 0.6){
-        		terrain = new Arbre();	
-        	    }
-        	    
-        	    else{
-    	            if(Math.random() < 0.8){
-    		        terrain = new Eau();	
-    	            }
-    	            else{
-		                terrain = new Verdure();
-	               }
-	            }
-	        }
-    	}
+	System.out.println("hello2");
+	double rand = Math.random();
+    	if(rand < 0.3334) terrain = new Terre();
+    	else if (rand < 0.6667) terrain = new Plante();		
+    	else terrain = new Verdure();
     }
     ////////////////////////////GETTEURS////////////////////////////
 
@@ -62,23 +51,6 @@ public class Case{
 	this.terrain = terrain;
     }
     
-    public void setCouleur(Terrain t){
-    	if(t instanceof Eau)
-	    couleur = Color.blue;
-    	else if(t instanceof Terre)
-	    couleur = new Color(63,34,4);//RGB du marron	
-    	else if(t instanceof Verdure){
-	    if(t instanceof Plante){
-		couleur = new Color(86,130,3);// Vert avocat
-	    }
-	    else if(t instanceof Arbre){
-		couleur = new Color(0,86,27);// Vert empire
-	    }
-	    else{
-		couleur = new Color(58,137,35);//RGB d'un vert	
-	    }
-	}
-    }
     
     
     ////////////////////////////UTILITAIRES////////////////////////////
@@ -102,24 +74,17 @@ public class Case{
 	
 	}
 
-    public void afficherAnimaux(){
+    public void afficherAnimaux(Graphics2D g, int caseX, int caseY){
+	int i = 0,j=0;
     	for(Animal a : animaux){
-	    if(a instanceof Cerf){
-		System.out.print("C");
-	    }
-	    if(a instanceof Ours){
-		System.out.print("O");
-	    }
-	    if(a instanceof Lapin){
-		System.out.print("L");
-	    }
-	    if(a instanceof Loup){
-		System.out.print("Lo");
-	    }
-	    if(a instanceof Renard){
-		System.out.print("R");
-	    }
-    	}
+		a.afficher(g,i*5+caseX,j*5+caseY);
+		i++;
+		if (i > 95){
+			i = 0;
+			j++;
+		}
+			    
+	}
     }
     
     public void ajouterAnimal(Animal a){

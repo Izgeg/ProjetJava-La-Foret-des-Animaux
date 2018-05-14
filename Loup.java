@@ -68,7 +68,7 @@ public class Loup extends Animal implements Predateur{
 
     
     public double attaquer(){
-	return Math.random()*Constante.JetOff + Constante.attaqueLoup + energie;
+	return Math.random()*Constante.JetOff + attaqueLoup + energie;
     }    
 
 
@@ -132,11 +132,17 @@ public class Loup extends Animal implements Predateur{
 	return false;
     }
 
-	public void combattre(Animal a);{
+	public void mangerAnimal(Animal a, Foret f){
+		this.energie += 0.5*a.energie;//pris au pif
+		((Animal)a).mourir(f);
+		
+}
+
+	public void combattre(Animal a, Foret f){
 		double attack = this.attaquer();		
-		double defense = a.seDefendre();
+		double defense = ((Proie)a).seDefendre();
 		if(attack >= defense){
-			manger(a);
+			mangerAnimal(a, f);
 			if(attack == defense)
 				this.energie -= 10;//en cas d'égalité, le prédateur gagne mais perd de l'energie
 		}
