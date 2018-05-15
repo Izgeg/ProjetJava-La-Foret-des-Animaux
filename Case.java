@@ -77,7 +77,7 @@ public class Case{
     public void afficherAnimaux(Graphics2D g, int caseX, int caseY){
 	int i = 0,j=0;
     	for(Animal a : animaux){
-		a.afficher(g,i*5+caseX,j*5+caseY);
+		a.afficher(g,i*10+caseX,j*10+caseY);
 		i++;
 		if (i > 95){
 			i = 0;

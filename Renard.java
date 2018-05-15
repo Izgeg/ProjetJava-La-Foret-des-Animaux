@@ -1,5 +1,13 @@
 import java.lang.Math;
 import java.util.ArrayList;
+import javax.imageio.ImageIO;
+import java.io.File;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+import java.awt.Graphics2D;
 
 public class Renard extends Animal implements Predateur, Proie{
     private final static int odorat = 3;
@@ -10,21 +18,28 @@ public class Renard extends Animal implements Predateur, Proie{
     
     ////////////////////////////CONSTRUCTEURS////////////////////////////
     
-    public Renard(int x, int y, int age, char sexe){
+  public Renard(int x, int y, int age, char sexe){
 	super(x,y,age,sexe);
+try{
+			animalImage = ImageIO.read(new File("renard.png"));
+		}catch(Exception e){e.printStackTrace();}
+
 
     }
     
     public Renard(int x, int y){
         super(x,y);
-
+try{
+			animalImage = ImageIO.read(new File("renard.png"));
+		}catch(Exception e){e.printStackTrace();}
     }
-
+    
     public Renard(){
 	super();
-
+try{
+			animalImage = ImageIO.read(new File("renard.png"));
+		}catch(Exception e){e.printStackTrace();}
     }
-
     ////////////////////////////ACTIONS////////////////////////////
 
     public double seDefendre(){
@@ -195,6 +210,8 @@ public void combattre(Animal a, Foret f){
 		}
 	
 	}
-
+public void afficher(Graphics2D g, int posX, int posY){
+		g.drawImage(animalImage,posX,posY,null);
+}
 
 }

@@ -17,7 +17,6 @@ public abstract class Animal{
     protected int age;//en mois
     protected char sexe;
     protected boolean bienManger = false;
-
 	protected BufferedImage animalImage;
 
 

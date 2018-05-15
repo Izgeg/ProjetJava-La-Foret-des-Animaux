@@ -1,5 +1,13 @@
 import java.lang.Math;
 import java.util.ArrayList;
+import javax.imageio.ImageIO;
+import java.io.File;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+import java.awt.Graphics2D;
 
 public class Loup extends Animal implements Predateur{
     public static final double attaqueLoup = 75.;
@@ -11,14 +19,25 @@ public class Loup extends Animal implements Predateur{
     
     public Loup(int x, int y, int age, char sexe){
 	super(x,y,age,sexe);
+try{
+			animalImage = ImageIO.read(new File("loup.png"));
+		}catch(Exception e){e.printStackTrace();}
+
+
     }
     
     public Loup(int x, int y){
         super(x,y);
+try{
+			animalImage = ImageIO.read(new File("loup.png"));
+		}catch(Exception e){e.printStackTrace();}
     }
     
     public Loup(){
 	super();
+try{
+			animalImage = ImageIO.read(new File("loup.png"));
+		}catch(Exception e){e.printStackTrace();}
     }
 
     ////////////////////////////ACTTIONS////////////////////////////
@@ -151,6 +170,10 @@ public class Loup extends Animal implements Predateur{
 		}
 	
 	}
+
+public void afficher(Graphics2D g, int posX, int posY){
+		g.drawImage(animalImage,posX,posY,null);
+}
 
 
     

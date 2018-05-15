@@ -1,5 +1,14 @@
 import java.lang.Math;
 import java.util.ArrayList;
+import javax.imageio.ImageIO;
+import java.io.File;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+import java.awt.Graphics2D;
+
 
 public class Lapin extends Animal{
     public static final double defenseLapin = 0.5;
@@ -8,21 +17,28 @@ public class Lapin extends Animal{
 
     ////////////////////////////CONSTRUCTEURS////////////////////////////
     
-    public Lapin(int x, int y, int age, char sexe){
+   public Lapin(int x, int y, int age, char sexe){
 	super(x,y,age,sexe);
+try{
+			animalImage = ImageIO.read(new File("lapin.png"));
+		}catch(Exception e){e.printStackTrace();}
+
 
     }
     
     public Lapin(int x, int y){
         super(x,y);
-
-    }
-
-    public Lapin(){
-	super();
-
+try{
+			animalImage = ImageIO.read(new File("lapin.png"));
+		}catch(Exception e){e.printStackTrace();}
     }
     
+    public Lapin(){
+	super();
+try{
+			animalImage = ImageIO.read(new File("lapin.png"));
+		}catch(Exception e){e.printStackTrace();}
+    }
     ////////////////////////////ACTIONS////////////////////////////
     
     public double seDefendre(){
@@ -123,5 +139,7 @@ public class Lapin extends Animal{
 	
 	return false;
     }
-    
+    public void afficher(Graphics2D g, int posX, int posY){
+		g.drawImage(animalImage,posX,posY,null);
+}
 }

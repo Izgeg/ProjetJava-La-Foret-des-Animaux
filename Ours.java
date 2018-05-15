@@ -1,6 +1,13 @@
 import java.lang.Math;
 import java.util.ArrayList;
-
+import javax.imageio.ImageIO;
+import java.io.File;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+import java.awt.Graphics2D;
 
 public class Ours extends Animal implements Predateur{
     public static final double attaqueOurs = 90.;
@@ -9,21 +16,28 @@ public class Ours extends Animal implements Predateur{
     
     
     ////////////////////////////CONSTRUCTEURS////////////////////////////
-    
-    public Ours(int x, int y, int age, char sexe){
+   public Ours(int x, int y, int age, char sexe){
 	super(x,y,age,sexe);
+try{
+			animalImage = ImageIO.read(new File("ours.png"));
+		}catch(Exception e){e.printStackTrace();}
+
+
     }
     
     public Ours(int x, int y){
         super(x,y);
-
+try{
+			animalImage = ImageIO.read(new File("ours.png"));
+		}catch(Exception e){e.printStackTrace();}
     }
-
+    
     public Ours(){
 	super();
-
+try{
+			animalImage = ImageIO.read(new File("ours.png"));
+		}catch(Exception e){e.printStackTrace();}
     }
-
     ////////////////////////////ACTIONS////////////////////////////
 
     public Animal seReproduire(Animal a, Foret f){
@@ -141,6 +155,10 @@ public void combattre(Animal a, Foret f){
 		}
 	
 	}
+
+	public void afficher(Graphics2D g, int posX, int posY){
+		g.drawImage(animalImage,posX,posY,null);
+}
 
     
 

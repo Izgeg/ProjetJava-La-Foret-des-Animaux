@@ -1,5 +1,14 @@
 import java.lang.Math;
 import java.util.ArrayList;
+import javax.imageio.ImageIO;
+import java.io.File;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+import java.awt.Graphics2D;
+
 
 public class Cerf extends Animal implements Proie{
     public static final double defenseCerf = 80.;
@@ -9,14 +18,25 @@ public class Cerf extends Animal implements Proie{
     ////////////////////////////CONSTRUCTEURS////////////////////////////
     public Cerf(int x, int y, int age, char sexe){
 	super(x,y,age,sexe);
+try{
+			animalImage = ImageIO.read(new File("cerf.png"));
+		}catch(Exception e){e.printStackTrace();}
+
+
     }
     
     public Cerf(int x, int y){
         super(x,y);
+try{
+			animalImage = ImageIO.read(new File("cerf.png"));
+		}catch(Exception e){e.printStackTrace();}
     }
     
     public Cerf(){
 	super();
+try{
+			animalImage = ImageIO.read(new File("cerf.png"));
+		}catch(Exception e){e.printStackTrace();}
     }
     
     ////////////////////////////ACTIONSS////////////////////////////
@@ -119,5 +139,7 @@ public class Cerf extends Animal implements Proie{
 	else 
 	    return false;	
     }
-    
+    public void afficher(Graphics2D g, int posX, int posY){
+		g.drawImage(animalImage,posX,posY,null);
+}
 }
