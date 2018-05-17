@@ -17,6 +17,7 @@ public abstract class Animal{
     protected int age;//en mois
     protected char sexe;
     protected boolean bienManger = false;
+	protected boolean mort = false;
 	protected BufferedImage animalImage;
 
 
@@ -41,7 +42,7 @@ public abstract class Animal{
 	}
 
     public Animal(){
-		this((int)(Math.random()*Constante.tailleX),(int)(Math.random()*Constante.tailleY),12,'m');
+		this((int)(Math.random()*10),(int)(Math.random()*10),12,'m');
 		if(Math.random() > 0.5) this.sexe = 'f';
 		this.energie = (int)Math.random()*50 + 50;
     }
@@ -66,8 +67,8 @@ public abstract class Animal{
     	bienManger = a ;
     }
 
-	public void mourir(Foret f){
-		f.foret[this.x][this.y].getAnimaux().remove(this);
+	public void mourir(){
+		mort = true;
 	}
     
     ////////////////////////////GETTEURS////////////////////////////
@@ -95,18 +96,25 @@ public abstract class Animal{
 	public boolean getBienManger(){
 		return bienManger;
 	}
+
+	public boolean enVie(){
+		return !mort ;
+	}
     ////////////////////////////ACTIONS////////////////////////////
     public void marcher(){
 	if((x+directionX >= 0) && (x+directionX < Constante.tailleY))
 	    x += directionX;
 	if((y+directionY >= 0) && (y+directionY < Constante.tailleY))
 	    y += directionY;
-	energie -= Math.abs(directionX) + Math.abs(directionY);
+	energie -= Math.abs(directionX); 
+	energie -= Math.abs(directionY);
+	energie -= (int)(age/100) ; //il perd plus d'energie en vieillissant
+	
 	directionX = (int)(Math.random()*3)-1;
 	directionY = (int)(Math.random()*3)-1;
     }
 
-    public void MangerEnergie(){
+    public void mangerEnergie(){
         if(energie < 80)
             energie += 20;
         else
@@ -114,8 +122,10 @@ public abstract class Animal{
     }
 
     
-    public abstract Animal seReproduire(Animal a, Foret f);
-        public boolean dejaManger(){
+    public abstract Animal seReproduire(Foret f);
+    public abstract boolean naissance(Animal a);
+        
+	public boolean dejaManger(){
         return this.bienManger;
     }
     public void setbienManger(boolean a){

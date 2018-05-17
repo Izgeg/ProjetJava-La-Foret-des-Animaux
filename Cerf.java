@@ -11,7 +11,7 @@ import java.awt.Graphics2D;
 
 
 public class Cerf extends Animal implements Proie{
-    public static final double defenseCerf = 80.;
+    public  static final int defenseCerf = 80;
     private final static int odorat = 3;
     private final static int vitesse = 4;
     
@@ -39,14 +39,14 @@ try{
 		}catch(Exception e){e.printStackTrace();}
     }
     
-    ////////////////////////////ACTIONSS////////////////////////////
+    ////////////////////////////ACTIONS////////////////////////////
     
-    public double seDefendre(){
-        return Math.random()*Constante.JetDef + defenseCerf + energie;
+    public int seDefendre(){
+        return (int)(defenseCerf + energie);
         
     } 
     
-    public Animal seReproduire(Animal a, Foret f){
+    public Animal seReproduire(Foret f){
 	boolean nouveau = false;
 	Animal bebe;
 	
@@ -81,7 +81,6 @@ try{
     }
 
     
-    // A REVOIR
     public void fuir(Animal a){
     		if(a.x > this.x){
 			directionX = -1*Math.min(a.x - this.x,vitesse);
@@ -99,8 +98,44 @@ try{
     
     	x+= directionX;
     	y+= directionY;
+	energie -= Math.abs(directionX);
+	energie -= Math.abs(directionY);
     }
 
+	public void sentirPlante(Foret f){
+		for(int i = this.getY() + 1 ; i < this.getY() - 1 ; ++i){
+	    	for(int j = this.getX() - 1 ; i < this.getX() + 1 ; ++j){
+				if(f.foret[i][j].getTerrain() instanceof Plante) allerVers(i,j);
+			}
+		}
+	}
+
+	public void mangerPlante(Plante p){
+		p.setTaille(p.getTaille()-4);
+		this.setBienManger(true);
+		this.mangerEnergie();
+	}
+	
+	public void allerVers(int i, int j){
+		if(i > this.x){
+			directionX = Math.min(i - this.x,vitesse);
+		}
+		else{
+			directionX = Math.max(i - this.x,-vitesse);
+		}
+		
+		if(j > this.y){
+			directionY = Math.min(j - this.y,vitesse);
+		}
+		else{
+			directionY = Math.max(j - this.y,-vitesse);
+		}
+    
+    	x+= directionX;
+    	y+= directionY;
+		energie -= Math.abs(directionX);
+		energie -= Math.abs(directionY);
+	}
     
 
     ////////////////////////////UTILITAIRES////////////////////////////
@@ -132,7 +167,7 @@ try{
     
     public boolean naissance(Animal a){
 	if(a instanceof Cerf && a.getSexe() != this.getSexe())	
-	    if(Math.random()*100 < Constante.reproduction)
+	    if(Math.random()*100 < Constante.reproductionHerbivores)
 		return true;
 	    else 
 		return false;
@@ -141,5 +176,9 @@ try{
     }
     public void afficher(Graphics2D g, int posX, int posY){
 		g.drawImage(animalImage,posX,posY,null);
+}
+
+	public String toString(){
+		return "Je suis un Cerf, j'ai " + age + " mois" +  " il me reste " + energie + "d'energie" ;
 }
 }

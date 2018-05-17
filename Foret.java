@@ -59,29 +59,27 @@ public class Foret{
     	Foret foretStock = this.clone();
     	for(int i=0;i<longueur;i++){
     	    for(int j=0;j<largeur;j++){
-    		if (!(foret[i][j].animaux.isEmpty())){
-    		    for(int k = 0; k<foret[i][j].animaux.size(); k++){
-    		        // Marcher
-			foret[i][j].marcherAnimaux();
-      			// Sentir + Chasser + Fuir
-    			// Une fois tous les prédateurs en place 
-    			// A la place de instanceof Loup ===> instanceof Predateur
-    			if(foret[i][j].getAnimaux().get(k) instanceof Proie){
-    			    ((Proie)(foret[i][j].getAnimaux().get(k))).sentirPredateur(this);
-    			}
-    			if(foret[i][j].getAnimaux().get(k) instanceof Predateur){
-    			    ((Predateur)(foret[i][j].getAnimaux().get(k))).sentirProie(this);
-    			}
-    			
-    			
-    			// Manger eventuellement seBattre à rajouter
-    			mangerList(foret[i][j].getAnimaux());
-    			mangerHerbivore(foret[i][j]);
-    			
-    			
-    			resetManger(this);
-    			foretStock.addAnimal(foret[i][j].animaux.get(k));
-    		    }
+    		if (!(foret[i][j].getAnimaux().isEmpty())){   		    
+			for(Animal a : foret[i][j].getAnimaux()){
+	    		        // Marcher
+				foret[i][j].marcherAnimaux();
+	      			// Sentir + Chasser + Fuir
+	    			// Une fois tous les prédateurs en place 
+	    			// A la place de instanceof Loup ===> instanceof Predateur
+	    			if(a instanceof Proie){
+	    			    ((Proie)a).sentirPredateur(this);
+	    			}
+	    			if(a instanceof Predateur){
+	    			    ((Predateur)a).sentirProie(this);
+	    			}
+	    			// Manger eventuellement seBattre à rajouter
+	    			mangerList(foret[i][j].getAnimaux());
+			
+			
+	    			mangerHerbivore(foret[i][j]);
+	    			resetManger(this);
+	    			foretStock.addAnimal(a);	
+    		    	}
     		    
     		}
 
@@ -92,81 +90,75 @@ public class Foret{
 	}
 	return foretStock;
     }
-	
+
+
+
     public void vieillirForet(Case c){
-        if (!(c.animaux.isEmpty())){
+        if (!(c.getAnimaux().isEmpty())){
             for(Animal a : c.getAnimaux()){
                 a.vieillir();
-
-            }
+		if (a.getEnergie() <= 0) a.mourir();
+		}
+        	   
         }
+		c.setTerrain(c.getTerrain().actualiserTerrain()); 
+		c.setAnimaux(c.nettoyerMorts(c.getAnimaux()));
+}
     
-        if(c.getTerrain() instanceof Plante){
-            if(((Plante)(c.getTerrain())).estComestible()){
-                System.out.println("TEST");
-                ((Plante)(c.getTerrain())).vieillir();
-            }
-        }
-    }
 
 
 	
     public void mangerHerbivore(Case c){
-	for(int k=0 ; k < c.getAnimaux().size() ; k++){
-	    if(c.getAnimaux().get(k) instanceof Proie){
+	for(Animal a : c.getAnimaux()){
+	    if(a instanceof Proie && !(a.getBienManger())){
 		if(c.getTerrain() instanceof Plante){
-    
-                    if(c.getTerrain() instanceof Arbre){
-                        if(((Arbre)(c.getTerrain())).estProducteur()){
-                            ((Arbre)(c.getTerrain())).estMange();
-                            c.getAnimaux().get(k).setbienManger(true);
-                            c.getAnimaux().get(k).MangerEnergie();
-                        }
-                    }
-                    else{
                         if(((Plante)(c.getTerrain())).estComestible()){
-                            ((Plante)(c.getTerrain())).estMange();
-                            c.getAnimaux().get(k).setbienManger(true);
-                            c.getAnimaux().get(k).MangerEnergie();
+                            ((Proie)a).mangerPlante(((Plante)(c.getTerrain())));
                         }
                     }
                 } 
 	    }
 	}
-    }
-
+    
 	
+    /*public void mangerList(ArrayList<Animal> list){
+	ArrayList<Animal> listTemp = list;	
+	for(Animal a : listTemp){
 	
-    // ++ Rajouter seBattre ???
-    public void mangerList(ArrayList<Animal> list){
-	for(Animal a : list){
-	    for(Animal b : list){
-		if(a instanceof Predateur){
-		    if(((Predateur)(a)).estProie(b)){
+	    if(a instanceof Predateur && list.contains(a)){
+		for(Animal b : listTemp){
+			System.out.println("No soucis2 en ("+ a.getX() + "," + a.getY() +")");
+		    if(((Predateur)(a)).estProie(b) && list.contains(b)){
 			if(a.getBienManger()==false){
-			    a.MangerEnergie();
-			    list.remove(b);
-			    a.setbienManger(true);
-			    // Rappel de manger sur la list car comme la liste à changer de size, si on ne rappelle pas segmentation fault
-			    // eventuellement créer un attribut rassasié, qui empêche un loup de manger 2 proies ???
-			    mangerList(list);
-	                    
+			    ((Predateur)a).combattre(b);
+				System.out.println("bite");
+				return;
+			
 			    // Pour sortir & éviter le segmentation fault
-	                    return;
 			}
 		    }
 		}
 	    }
 	}
-    }
+    }*/
+    
+	public void mangerList(ArrayList<Animal> list){
+		Predateur pred = null;
+		Animal b = null;		
+		for(Animal a : list){
+			if (a instanceof Predateur) pred = (Predateur)a;
+				if (pred != null){
+					b = pred.choisirProie(list);
+					if(b != null) pred.combattre(b);		
+				}
+  	}
+}
 	
     public void resetManger(Foret f){
 	for(int i=0;i<longueur;i++){
 	    for(int j=0;j<largeur;j++){
-		if (!(foret[i][j].animaux.isEmpty())){
-		    for(Animal a : foret[i][j].animaux){
-			a.setbienManger(false);
-		    }
+		if (!(foret[i][j].getAnimaux().isEmpty())){
+		    for(Animal a : foret[i][j].getAnimaux()) a.setbienManger(false);
 		}
 	    }
 	}

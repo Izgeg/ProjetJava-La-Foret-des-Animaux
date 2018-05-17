@@ -10,10 +10,10 @@ import java.awt.image.BufferedImage;
 import java.awt.Graphics2D;
 
 
-public class Lapin extends Animal{
-    public static final double defenseLapin = 0.5;
-    private final static int odorat = 2;
-    private final static int vitesse = 1;
+public class Lapin extends Animal implements Proie{
+    public  static final double defenseLapin = 0.5;
+    private static final int odorat = 2;
+    private static final int vitesse = 1;
 
     ////////////////////////////CONSTRUCTEURS////////////////////////////
     
@@ -41,12 +41,12 @@ try{
     }
     ////////////////////////////ACTIONS////////////////////////////
     
-    public double seDefendre(){
-	return Math.random()*Constante.JetDef + defenseLapin + energie;
+    public int seDefendre(){
+	return (int)(defenseLapin + energie);
     }    
 
 
-    public Animal seReproduire(Animal a, Foret f){
+    public Animal seReproduire(Foret f){
 	boolean nouveau = false;
 	Animal bebe;
 		
@@ -62,6 +62,40 @@ try{
 	else
 	    return null;
     }
+	
+	public void mangerPlante(Plante p){
+		p.setTaille(p.getTaille()-3);
+		this.setBienManger(true);
+		this.mangerEnergie();
+	}
+	public void sentirPlante(Foret f){
+		for(int i = this.getY() + 1 ; i < this.getY() - 1 ; ++i){
+	    	for(int j = this.getX() - 1 ; i < this.getX() + 1 ; ++j){
+				if(f.foret[i][j].getTerrain() instanceof Plante) allerVers(i,j);
+			}
+		}
+	}
+	
+	public void allerVers(int i, int j){
+		if(i > this.x){
+			directionX = Math.min(i - this.x,vitesse);
+		}
+		else{
+			directionX = Math.max(i - this.x,-vitesse);
+		}
+		
+		if(j > this.y){
+			directionY = Math.min(j - this.y,vitesse);
+		}
+		else{
+			directionY = Math.max(j - this.y,-vitesse);
+		}
+    
+    	x+= directionX;
+    	y+= directionY;
+		energie -= Math.abs(directionX);
+		energie -= Math.abs(directionY);
+	}
 
     public void sentirPredateur(Foret f){
 	ArrayList<Animal> predateursPotentielles = new ArrayList<Animal>() ;
@@ -100,6 +134,8 @@ try{
     
     	x+= directionX;
     	y+= directionY;
+	energie -= Math.abs(directionX);
+	energie -= Math.abs(directionY);
     }
 
     
@@ -107,7 +143,7 @@ try{
 
     public boolean naissance(Animal a){
 	if(a instanceof Lapin && a.getSexe() != this.getSexe())	
-	    if(Math.random()*100 < Constante.reproduction)
+	    if(Math.random()*100 < Constante.reproductionHerbivores)
 		return true;
 	    else 
 		return false;
@@ -139,6 +175,10 @@ try{
 	
 	return false;
     }
+
+	public String toString(){
+		return "Je suis un Lapin, j'ai " + age + " mois" + " il me reste " + energie + "d'energie" ;
+}
     public void afficher(Graphics2D g, int posX, int posY){
 		g.drawImage(animalImage,posX,posY,null);
 }

@@ -10,10 +10,8 @@ import java.awt.Graphics2D;
 import java.lang.Math;
 
 public class Case{
-    protected Color couleur;
-    public ArrayList<Animal> animaux; 
-    protected Terrain terrain;
-    
+    private ArrayList<Animal> animaux; 
+    private Terrain terrain;
     ////////////////////////////CONSTRUCTEURS////////////////////////////
 
     public Case(Terrain t){
@@ -30,10 +28,12 @@ public class Case{
 
 
     public void initAleaCase(){
-	System.out.println("hello2");
 	double rand = Math.random();
     	if(rand < 0.3334) terrain = new Terre();
-    	else if (rand < 0.6667) terrain = new Plante();		
+    	else if (rand < 0.6667){
+	if (Math.random() > 0.5) terrain = new Plante();
+	else terrain = new Plante(false);
+	} 		
     	else terrain = new Verdure();
     }
     ////////////////////////////GETTEURS////////////////////////////
@@ -47,10 +47,12 @@ public class Case{
     }
     
     ////////////////////////////SETTEURS////////////////////////////
-    public void setTerrain(Terrain t){
+    public void setTerrain(Terrain terrain){
 	this.terrain = terrain;
     }
-    
+    public void setAnimaux(ArrayList<Animal> list){
+	this.animaux = list ;
+	}
     
     
     ////////////////////////////UTILITAIRES////////////////////////////
@@ -59,7 +61,7 @@ public class Case{
     public Case clone(){
     	Case CloneCase;
     	CloneCase = new Case(terrain);
-    	CloneCase.couleur = couleur;
+
     	
     	CloneCase.animaux = new ArrayList<Animal>();
     	// CloneCase.animaux = new ArrayList<Animal>(animaux);
@@ -75,16 +77,16 @@ public class Case{
 	}
 
     public void afficherAnimaux(Graphics2D g, int caseX, int caseY){
-	int i = 0,j=0;
+		int i = 0,j=0;
     	for(Animal a : animaux){
-		a.afficher(g,i*10+caseX,j*10+caseY);
-		i++;
-		if (i > 95){
-			i = 0;
-			j++;
-		}
+			a.afficher(g,i*20+caseX,j*20+caseY);
+			i++;
+				if (i > 80){
+					i = 0;
+					j += 20;
+				}
 			    
-	}
+		}
     }
     
     public void ajouterAnimal(Animal a){
@@ -94,8 +96,15 @@ public class Case{
     
     
     public void enleverAnimal(Animal a){
-	animaux.remove(a);
+		animaux.remove(a);
     }
     
-
+	public ArrayList<Animal> nettoyerMorts(ArrayList<Animal> list){	
+		ArrayList<Animal> listActualisee = (ArrayList<Animal>)list.clone();	
+		for(Animal a : list){
+			if(!a.enVie() || a.getEnergie() <= 0) listActualisee.remove(a);
+		}
+		return listActualisee;
+	}
+	
 }

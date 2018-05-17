@@ -7,7 +7,7 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.Graphics2D;
 
-public class Plante extends Verdure{
+public class Plante extends Terrain{
     private boolean comestible;
     private int taille;
     
@@ -17,16 +17,15 @@ public class Plante extends Verdure{
 	
 	try{
 		terrainImage = ImageIO.read(new File("plante.png"));
-		System.out.println("hello");
 	}catch(Exception e){e.printStackTrace();}
     } 
     
     public Plante(boolean comestible){
-       this(comestible, (int)(Math.random()*11));
+       this(comestible, (int)(Math.random()*Constante.TailleApparitionPlante));
     }
 
     public Plante(){
-        this(true, (int)(Math.random()*11));
+        this(true, (int)(Math.random()*Constante.TailleApparitionPlante));
     }
     
     public boolean estComestible(){
@@ -34,19 +33,31 @@ public class Plante extends Verdure{
     }
     
     public void vieillir(){
-        taille += 2;
+        if (taille < Constante.TailleMaxPlante) taille += 1;
+	else taille = Constante.TailleMaxPlante;
     }
     
-    public boolean estMange(){
-        if(taille > 0){
-            taille--;
-            return true;
-        }
-        else{
-            // Faire changer de classe devient Verdure ou devient Terre à voir
-        
-            return false;    
-        }
+	public int getTaille(){
+		return taille ;
+	}
+
+	public void setTaille(int taille){
+		this.taille = taille;
+	}
+	    public Terrain estMange(){
+        if(taille > 2) return new Plante(true,taille-3);
+        else return new Verdure();
+	}
+
+	public void afficher(Graphics2D g, int posX, int posY){
+		g.drawImage(terrainImage, posX, posY,null);
+		g.drawString(""+taille, posX+50, posY+50);
     }
+
+	public Terrain actualiserTerrain(){
+		if (taille <= 0) return new Terre();
+		else this.vieillir();		
+		return this ;
+	}
     
 }

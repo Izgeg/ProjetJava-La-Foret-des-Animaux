@@ -9,11 +9,11 @@ import java.awt.Graphics2D;
 
 public abstract class Terrain{
 	
-	protected BufferedImage terrainImage;	
+    protected BufferedImage terrainImage;	
 
-	public void afficher(Graphics2D g, int posX, int posY){
-		
+    public void afficher(Graphics2D g, int posX, int posY){
 		g.drawImage(terrainImage, posX, posY,null);
-	}
+    }
 
+	public abstract Terrain actualiserTerrain();
 }

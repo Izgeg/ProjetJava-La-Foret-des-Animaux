@@ -10,9 +10,9 @@ import java.awt.image.BufferedImage;
 import java.awt.Graphics2D;
 
 public class Loup extends Animal implements Predateur{
-    public static final double attaqueLoup = 75.;
-    private final static int odorat = 4;
-    private final static int vitesse = 4;
+    public  static final int attaqueLoup = 75;
+    private static final int odorat = 4;
+    private static final int vitesse = 4;
     
 
     ////////////////////////////CONSTRUCTEURS////////////////////////////
@@ -83,17 +83,19 @@ try{
     
     	x+= directionX;
     	y+= directionY;
+	energie -= Math.abs(directionX);
+	energie -= Math.abs(directionY);
     }
 
     
-    public double attaquer(){
-	return Math.random()*Constante.JetOff + attaqueLoup + energie;
+    public int attaquer(){
+	return (int)(Math.random()*40 + attaqueLoup + energie);
     }    
 
 
 
 
-    public Animal seReproduire(Animal a, Foret f){
+    public Animal seReproduire(Foret f){
 	boolean nouveau = false;
 	Animal bebe;
 		
@@ -117,6 +119,16 @@ try{
 
     ////////////////////////////UTILITAIRES////////////////////////////
     
+public Animal choisirProie(ArrayList<Animal> list){
+		for(Animal a : list){
+			if (this.estProie(a) && a.enVie()) return a;
+			}
+		return null;	
+		}
+
+
+
+
     public Animal plusProche(ArrayList<Animal> list){
 	double min_dist=odorat*2;
 	int indice = 0;
@@ -132,7 +144,7 @@ try{
     }
     public boolean naissance(Animal a){
 	if(a instanceof Loup && a.getSexe() != this.getSexe())	
-	    if(Math.random()*100 < Constante.reproduction)
+	    if(Math.random()*100 < Constante.reproductionCarnivores)
 		return true;
 	    else 
 		return false;
@@ -147,30 +159,32 @@ try{
 	    return true;
 	if(a instanceof Lapin)
 	    return true;
+	if(a instanceof Cerf)
+		return true;
 
 	return false;
     }
 
-	public void mangerAnimal(Animal a, Foret f){
-		this.energie += 0.5*a.energie;//pris au pif
-		((Animal)a).mourir(f);
+	public void mangerAnimal(Animal a){
+		this.energie += 0.5*a.getEnergie();//pris au pif
+		a.mourir();
+		this.setbienManger(true);
 		
 }
 
-	public void combattre(Animal a, Foret f){
+	public void combattre(Animal a){
 		double attack = this.attaquer();		
 		double defense = ((Proie)a).seDefendre();
+		System.out.println("nous sommes " + this.toString() + "\n attaque :" + attack + "\n et" + a.toString() + "\n defense :" + defense + " et nous nous battons en " + a.getX() + "," + a.getY());
 		if(attack >= defense){
-			mangerAnimal(a, f);
-			if(attack == defense)
-				this.energie -= 10;//en cas d'égalité, le prédateur gagne mais perd de l'energie
+			mangerAnimal(a);
+			if(attack == defense) this.energie -= 10;//en cas d'égalité, le prédateur gagne mais perd de l'energie
 		}
-		else{
-		this.energie -= (defense - attack)*5;	
-		}
-	
+		else this.energie -= (defense - attack)*5;	
 	}
-
+	public String toString(){
+		return "Je suis un Loup, j'ai " + age + " mois" + " il me reste " + energie + "d'energie" ;
+}
 public void afficher(Graphics2D g, int posX, int posY){
 		g.drawImage(animalImage,posX,posY,null);
 }

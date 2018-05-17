@@ -10,7 +10,7 @@ import java.awt.image.BufferedImage;
 import java.awt.Graphics2D;
 
 public class Ours extends Animal implements Predateur{
-    public static final double attaqueOurs = 90.;
+    public  static final int attaqueOurs = 90;
     private final static int odorat = 3;
     private final static int vitesse = 2;
     
@@ -40,7 +40,7 @@ try{
     }
     ////////////////////////////ACTIONS////////////////////////////
 
-    public Animal seReproduire(Animal a, Foret f){
+    public Animal seReproduire(Foret f){
 	boolean nouveau = false;
 	Animal bebe;
 		
@@ -56,8 +56,8 @@ try{
 	else
 	    return null;
     }
-    public double attaquer(){
-	return Math.random()*Constante.JetOff + attaqueOurs + energie;
+    public int attaquer(){
+	return (int)(Math.random()*50 + attaqueOurs + energie);
     }  
 
     public void sentirProie(Foret f){
@@ -101,10 +101,21 @@ try{
     
     	x+= directionX;
     	y+= directionY;
+	energie -= Math.abs(directionX);
+	energie -= Math.abs(directionY);
     }
     ////////////////////////////UTILITAIRES////////////////////////////
+public Animal choisirProie(ArrayList<Animal> list){
+		for(Animal a : list){
+			if (this.estProie(a) && a.enVie()) return a;
+			}
+		return null;	
+		}
 
-    public Animal plusProche(ArrayList<Animal> list){
+
+
+
+	public Animal plusProche(ArrayList<Animal> list){
 	double min_dist=odorat*2;
 	int indice = 0;
 	int indice_dist_min = 0;
@@ -129,7 +140,7 @@ try{
     }
     public boolean naissance(Animal a){
 	if(a instanceof Ours && a.getSexe() != this.getSexe())	
-	    if(Math.random()*100 < Constante.reproduction)
+	    if(Math.random()*100 < Constante.reproductionCarnivores)
 		return true;
 	    else 
 		return false;
@@ -137,24 +148,25 @@ try{
 	    return false;	
     }
 
-	public void mangerAnimal(Animal a, Foret f){
-		this.energie += 0.5*a.energie;//pris au pif
-		((Animal)a).mourir(f);
-	}
-
-public void combattre(Animal a, Foret f){
+	public void mangerAnimal(Animal a){
+		this.energie += 0.5*a.getEnergie();//pris au pif
+		a.mourir();
+		this.setbienManger(true);
+		
+}
+	public void combattre(Animal a){
 		double attack = this.attaquer();		
 		double defense = ((Proie)a).seDefendre();
+		System.out.println("nous sommes " + this.toString() + "\n attaque :" + attack + "\n et" + a.toString() + "\n defense :" + defense + " et nous nous battons en " + a.getX() + "," + a.getY());
 		if(attack >= defense){
-			mangerAnimal(a, f);
-			if(attack == defense)
-				this.energie -= 10;//en cas d'égalité, le prédateur gagne mais perd de l'energie
+			mangerAnimal(a);
+			if(attack == defense) this.energie -= 10;//en cas d'égalité, le prédateur gagne mais perd de l'energie
 		}
-		else{
-		this.energie -= (defense - attack)*5;	
-		}
-	
+		else this.energie -= (defense - attack)*5;	
 	}
+	public String toString(){
+		return "Je suis un Ours, j'ai " + age + " mois" + " il me reste " + energie + "d'energie" ;
+}
 
 	public void afficher(Graphics2D g, int posX, int posY){
 		g.drawImage(animalImage,posX,posY,null);

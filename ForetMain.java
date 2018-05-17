@@ -10,24 +10,20 @@ import java.awt.Graphics2D;
 public class ForetMain{
 
 	public static void main(String[] args){
+		int nbCerf = 20;
+		int nbLapin = 25;
+		int nbLoup = 20;
+		int nbOurs = 15;
+		int nbRenard = 30;
 		
+
+
 		Foret testForet = new Foret(Constante.tailleX,Constante.tailleY);
 		Fenetre testFenetre = new Fenetre("Foret Simulation", 1002,1040, testForet);	
 
-		Cerf c1 = new Cerf();
-		Cerf c2 = new Cerf();
-		Cerf c3 = new Cerf();
 		
-		Ours o1 = new Ours();
-		Ours o2 = new Ours();
-		
-		Lapin l1 = new Lapin();
-		Lapin l2 = new Lapin();
-		
-		Loup Lo1 = new Loup();
-		Loup Lo2 = new Loup();
-		
-		Renard r1 = new Renard();
+			
+
 		
 		
 		System.out.println(testForet.getLargeur());
@@ -35,18 +31,23 @@ public class ForetMain{
 		System.out.println(testForet.getLongueur());
 		
 		testForet.initForet();
+		for(int i = 0; i < nbCerf ; ++i){
+			Cerf c = new Cerf();
+			testForet.addAnimal(c);
+		}
 		
-		testForet.addAnimal(c1);
-		testForet.addAnimal(c2);
-		testForet.addAnimal(c3);
-		testForet.addAnimal(o1);
-		testForet.addAnimal(o2);
-		testForet.addAnimal(l1);
-		testForet.addAnimal(l2);
-		testForet.addAnimal(r1);
-
-		testForet.addAnimal(Lo1);
-		testForet.addAnimal(Lo2);		
+		for(int i = 0; i < nbLapin ; ++i){
+			testForet.addAnimal(new Lapin());
+		}
+		for(int i = 0; i < nbLoup ; ++i){
+			testForet.addAnimal(new Loup());
+		}
+		for(int i = 0; i < nbOurs ; ++i){
+			testForet.addAnimal(new Ours());
+		}
+		for(int i = 0; i < nbRenard ; ++i){
+			testForet.addAnimal(new Renard());
+		}		
 		
 		testFenetre.afficher();
 		while (true){
